@@ -19,10 +19,10 @@
 <body>
     <script>
 
-        // Aqui define a largura do jogo
+        // definindo a largura do jogo
         const larguraJogo = 700;
         
-        // Altura do jogo
+        // Definindo altura do jogo
         const alturaJogo = 850;
 
         const config = {
@@ -47,6 +47,7 @@
 
         const game = new Phaser.Game(config);
 
+        // aqui estão todas as variaveis 
         var alien;
         var teclado;
         var fogo;
@@ -58,7 +59,7 @@
         var tempotext;
 
         function preload() {
-            // Carrega imagens
+            // Carregando assets do jogo
             this.load.image('background', 'assets/bg.png');
             this.load.image('player', 'assets/alienigena.png');
             this.load.image('turbo_nave', 'assets/turbo.png');
@@ -67,19 +68,19 @@
         }
 
         function create() {
-            // Adiciona a imagem de fundo
+            // colocando o bg 
             this.add.image(larguraJogo/2, alturaJogo/2, 'background');
             
-            // Adiciona sprite do turbo
+            // colocando o turbo da nave
             fogo = this.add.sprite(0, 0, 'turbo_nave');
             fogo.setVisible(false);
 
-            // Adiciona sprite do alien e configurações
+            // adicionando  a sprite do alien e configurações
             alien = this.physics.add.sprite(larguraJogo/2, 0, 'player');
             alien.setCollideWorldBounds(true);
             teclado = this.input.keyboard.createCursorKeys();
 
-            // Configura teclado
+            // configurando as setinhas para funcionar 
             var cursor = this.input.keyboard.addKeys({
                 'up': Phaser.Input.Keyboard.KeyCodes.W,
                 'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -87,27 +88,27 @@
                 'left': Phaser.Input.Keyboard.KeyCodes.A
             });
 
-            // Adiciona plataforma e colisão com o alien
+            //  colocando colisão na plataforma
             plataforma = this.physics.add.staticImage(larguraJogo/2, alturaJogo/2, 'plataforma_tijolo');
             this.physics.add.collider(alien, plataforma);
 
-            // Adiciona moeda e colisão com a plataforma
+            // colocando a fisica da moeda com a plataforma 
             moeda = this.physics.add.sprite(larguraJogo/2, 0, 'moeda');
             moeda.setCollideWorldBounds(true);
             moeda.setBounce(0.7);
             this.physics.add.collider(moeda, plataforma);
 
-            // Adiciona placar e texto do tempo
+            // inserindo texto para a variavel placar e tempo text
             placar = this.add.text(50, 50, 'Moedas Coletadas:'+ pontuacao, {fontSize:'45px', fill:'#495613'});
             tempotext = this.add.text(50, 100, 'Tempo:'+ tempo, {fontSize:'45px', fill:'#495613'});
 
-            // Define o intervalo de tempo
+            // criando o "cronometro" aprendi essa função com veteranos, eu aprendi  e a partir dai apliquei no meu codigo, 
             setInterval(() => {
                 tempo++;
                 tempotext.setText('Tempo: ' + tempo)
             }, 1000);
 
-            // Verifica a sobreposição entre o alien e a moeda
+            // relaciona a sobreposição da moeda e do alien
             this.physics.add.overlap(alien, moeda, function(){
                 moeda.setVisible(false);
                 var posicaoMoeda_Y = Phaser.Math.RND.between(50, 650);
@@ -119,7 +120,7 @@
         }
 
         function update() {
-            // Atualiza a velocidade do alien de acordo com as teclas pressionadas
+            // atualização da velocidade do boneco quando pressionada uma tecla tanto para esquerda quanto para direita  
             if (teclado.left.isDown) {
                 alien.setVelocityX(-150);
             } else if (teclado.right.isDown) {
@@ -128,7 +129,7 @@
                 alien.setVelocityX(0);
             }
 
-            // Ativa ou desativa o turbo e posiciona o fogo no alien
+            
             if (teclado.up.isDown) {
                 alien.setVelocityY(-150);
                 ativarTurbo();
@@ -137,21 +138,23 @@
             }
             fogo.setPosition(alien.x, alien.y + alien.height/2);
 
-            // Verifica as condições de vitória ou derrota
+            // relaciona o tempo e o placar com os alertas dizendo que ou voce ganhou ou voce perdeu
             if (tempo == 20) {
                 window.alert('Você perdeu');
                 window.alert('Reinicie a página e tente novamente');
             } else if (pontuacao === 10) { 
                 window.alert('Você ganhou! Reinicie a página');
             }
+
+            //teste
         }
 
-        // Função para ativar o turbo
+        // função do turbo ativado e sua visibilidade 
         function ativarTurbo() {
             fogo.setVisible(true);
         }
 
-        // Função para desativar o turbo
+        // função para desativar o turbo e desativar sua visibilidade
         function semTurbo() {
             fogo.setVisible(false);
         }
